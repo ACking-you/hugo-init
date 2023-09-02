@@ -4,28 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:hugo_init/data_state.dart';
 import 'package:hugo_init/pages/theme_page.dart';
 import 'package:hugo_init/themes.dart';
+import 'package:process_run/process_run.dart';
 import 'package:provider/provider.dart';
 
-Future<bool> checkCommandsInstalled(
-    String executable, List<String> arguments) async {
-  try {
-    final res = await Process.run(executable, arguments);
-    // print(res.exitCode);
-    if (res.exitCode == 0) {
-      return true;
-    }
-    return false;
-  } catch (e) {
-    return false;
-  }
+bool checkGitInstalled() {
+  return whichSync('git') != null;
 }
 
-Future<bool> checkGitInstalled() async {
-  return await checkCommandsInstalled('git', ['--version']);
-}
-
-Future<bool> checkHugoInstalled() async {
-  return await checkCommandsInstalled('hugo', ['version']);
+bool checkHugoInstalled() {
+  return whichSync('hugo') != null;
 }
 
 const _hugoGuideUrl = 'https://gohugo.io/installation/';
@@ -100,8 +87,8 @@ class _GuidePageState extends State<GuidePage> {
             builder: (ctx, data, child) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: getCheckButton(data.checkGit, data: 'check git',
-                  callback: () async {
-                data.checkGit = await checkGitInstalled();
+                  callback: () {
+                data.checkGit = checkGitInstalled();
               },
                   installTip: '安装',
                   installUrl: _gitGuideUrl,
@@ -112,8 +99,8 @@ class _GuidePageState extends State<GuidePage> {
             builder: (ctx, data, child) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: getCheckButton(data.checkHugo, data: 'check hugo',
-                  callback: () async {
-                data.checkHugo = await checkHugoInstalled();
+                  callback: () {
+                data.checkHugo = checkHugoInstalled();
               },
                   installTip: '安装',
                   installUrl: _hugoGuideUrl,

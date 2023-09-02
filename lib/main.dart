@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (ctx) => DataState(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: DataState()),
+    ],
     child: const MyApp(),
   ));
 }
